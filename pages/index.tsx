@@ -1,62 +1,94 @@
-import { useWeb3React } from "@web3-react/core";
 import Head from "next/head";
-import Link from "next/link";
-import Account from "../components/Account";
-import ETHBalance from "../components/ETHBalance";
-import TokenBalance from "../components/TokenBalance";
-import useEagerConnect from "../hooks/useEagerConnect";
-
-const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
+import Menu from "./components/Menu";
+import { SplitView } from "./components/SplitView";
+import { useEthers } from "@usedapp/core";
+import { Wallet } from "./components/Wallet";
+import { Contract } from '@ethersproject/contracts'
+import { useLogs } from "@usedapp/core";
+import { constants } from 'ethers';
+import networkMapping from '../contracts/deployments/map.json';
+import { useCommits } from "../hooks/useCommits";
 
 function Home() {
-  const { account, library } = useWeb3React();
+  // const mock = [
+  //   {
+  //     name: 'Bob.eth',
+  //     files: [
+  //       {
+  //         name: 'Greeter Add',
+  //         files: [
+  //           { name: "0xwertyuidfghjk3456789dfghjk3456789xyz" }
+  //         ]
+  //       },
+  //       {
+  //         name: 'Greeter Remove',
+  //         files: [
+  //           { name: "0xwertyuidfsdfghjkjhgfdfghjk3456789qrt"},
+  //           { name: "0xdfghjklkgfghjkjhgfdfghjkjhgffgh89abc"}
+  //         ]
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     name: 'Jen.eth',
+  //     files: [
+  //       {
+  //         name: 'Greeter Add',
+  //         files: [
+  //           { name: "0xwertyuidfghjk3456789dfghjk3456789xyz" }
+  //         ]
+  //       },
+  //       {
+  //         name: 'Greeter Remove',
+  //         files: [
+  //           { name: "0xwertyuidfsdfghjkjhgfdfghjk3456789qrt"},
+  //           { name: "0xdfghjklkgfghjkjhgfdfghjkjhgffgh89abc"}
+  //         ]
+  //       }
+  //     ]
+  //   },
+  // ];
 
-  const triedToEagerConnect = useEagerConnect();
+  const data = useCommits();
 
-  const isConnected = typeof account === "string" && !!library;
+  console.log('asdfd', data);
 
   return (
     <div>
       <Head>
-        <title>next-web3-boilerplate</title>
+        <title>Upgrade UI Generator</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <header>
-        <nav>
-          <Link href="/">
-            <a>next-web3-boilerplate</a>
-          </Link>
-
-          <Account triedToEagerConnect={triedToEagerConnect} />
-        </nav>
-      </header>
-
       <main>
-        <h1>
-          Welcome to{" "}
-          <a href="https://github.com/mirshko/next-web3-boilerplate">
-            next-web3-boilerplate
-          </a>
-        </h1>
-
-        {isConnected && (
-          <section>
-            <ETHBalance />
-
-            <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" />
-          </section>
-        )}
+        <section>
+          <SplitView
+            left={<div>Generated ABI</div>}
+            right={<Menu data={data} />}
+          />
+        </section>
       </main>
 
       <style jsx>{`
-        nav {
-          display: flex;
-          justify-content: space-between;
+        section {
+          background: aliceblue;
+          height: 100%;
+          z-index: 1;
         }
-
         main {
-          text-align: center;
+          height: 100vh;
+          width: 100%;
+        }
+      `}</style>
+
+      <style jsx global>{`
+        html {
+          height:100vh;
+          overflow:hidden;
+        }
+        body {
+          margin:0;top:0;right:0;bottom:0;left:0;
+          position:absolute;
+          overflow:auto;
         }
       `}</style>
     </div>

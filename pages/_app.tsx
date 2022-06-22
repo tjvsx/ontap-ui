@@ -1,14 +1,18 @@
-import { Web3ReactProvider } from "@web3-react/core";
+import { DAppProvider, Config, DEFAULT_SUPPORTED_CHAINS } from "@usedapp/core";
 import type { AppProps } from "next/app";
-import getLibrary from "../getLibrary";
 import "../styles/globals.css";
 
-function NextWeb3App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
+
+  const config: Config = {
+        networks: [...DEFAULT_SUPPORTED_CHAINS],
+      }
+
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <DAppProvider config={config}>
       <Component {...pageProps} />
-    </Web3ReactProvider>
+    </DAppProvider>
   );
 }
 
-export default NextWeb3App;
+export default App;
